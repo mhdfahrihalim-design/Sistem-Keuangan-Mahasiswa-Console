@@ -42,17 +42,15 @@ static void cetakMenuAwal(void)
 static void cetakMenuUtama(void)
 {
     printf("\n=== MENU UTAMA (%s) ===\n", getUsernameAktif());
-    printf(" 1. Tambah uang masuk\n");
-    printf(" 2. Tambah pengeluaran\n");
-    printf(" 3. Lihat saldo\n");
-    printf(" 4. Riwayat transaksi\n");
-    printf(" 5. Cari transaksi\n");
-    printf(" 6. Ubah transaksi\n");
-    printf(" 7. Hapus transaksi\n");
-    printf(" 8. Laporan keuangan\n");
-    printf(" 9. Laporan bulanan\n");
-    printf("10. Simpan data\n");
-    printf("11. Logout\n");
+    printf("1. Tambah uang masuk\n");
+    printf("2. Tambah pengeluaran\n");
+    printf("3. Lihat saldo\n");
+    printf("4. Riwayat transaksi\n");
+    printf("5. Ubah transaksi\n");
+    printf("6. Laporan keuangan\n");
+    printf("7. Laporan bulanan\n");
+    printf("8. Simpan data\n");
+    printf("9. Logout\n");
     printf("Pilih: ");
 }
 
@@ -74,15 +72,13 @@ void menuUtama(void)
             case 2:  tambahPengeluaran(); break;
             case 3:  lihatSaldo();        break;
             case 4:  riwayatTransaksi();  break;
-            case 5:  cariTransaksi();     break;
-            case 6:  ubahTransaksi();     break;
-            case 7:  hapusTransaksi();    break;
-            case 8:  laporanKeuangan();   break;
-            case 9:  laporanBulanan();    break;
-            case 10:
+            case 5:  ubahTransaksi();     break;
+            case 6:  laporanKeuangan();   break;
+            case 7:  laporanBulanan();    break;
+            case 8:
                 if (simpanData()) printf("Data berhasil disimpan.\n");
                 break;
-            case 11: logoutPengguna();    break;
+            case 9:  logoutPengguna();    break;
             default:
                 printf("Pilihan tidak valid.\n");
         }
