@@ -33,9 +33,6 @@ void cariTransaksi(void);
 void ubahTransaksi(void);
 void hapusTransaksi(void);
 
-/* Bantuan untuk modul laporan (Anggota 4) */
-long hitungTotalMasuk(const char *username);
-long hitungTotalKeluar(const char *username);
-long hitungSaldo(const char *username);
+/* Perhitungan saldo ada di laporan.h (modul Laporan & Penyimpanan) */
 
 #endif

@@ -3,9 +3,10 @@
 #include <string.h>
 #include "user.h"
 #include "transaksi.h"
-#include "laporan.h"
+#include "laporan.h"    
 
-#define MAX_BULAN 120
+#define MAX_BULAN    120
+#define MAX_KATEGORI 50
 
 /* Bandingkan dua kunci "MM-YYYY" berdasarkan tahun lalu bulan */
 static int bandingBulan(const char *a, const char *b)
@@ -14,6 +15,87 @@ static int bandingBulan(const char *a, const char *b)
     int ba = atoi(a),     bb = atoi(b);
     if (ta != tb) return ta - tb;
     return ba - bb;
+}
+
+/* ---------- perhitungan saldo ---------- */
+
+long hitungTotalMasuk(const char *username)
+{
+    long total = 0;
+    int i;
+    for (i = 0; i < jumlahTransaksi; i++) {
+        if (strcmp(daftarTransaksi[i].username, username) == 0 &&
+            daftarTransaksi[i].tipe == TRANSAKSI_MASUK)
+            total += daftarTransaksi[i].jumlah;
+    }
+    return total;
+}
+
+long hitungTotalKeluar(const char *username)
+{
+    long total = 0;
+    int i;
+    for (i = 0; i < jumlahTransaksi; i++) {
+        if (strcmp(daftarTransaksi[i].username, username) == 0 &&
+            daftarTransaksi[i].tipe == TRANSAKSI_KELUAR)
+            total += daftarTransaksi[i].jumlah;
+    }
+    return total;
+}
+
+long hitungSaldo(const char *username)
+{
+    return hitungTotalMasuk(username) - hitungTotalKeluar(username);
+}
+
+void lihatSaldo(void)
+{
+    const char *user = getUsernameAktif();
+
+    if (user == NULL) {
+        printf("Silakan login terlebih dahulu.\n");
+        return;
+    }
+    printf("\n=== SALDO ===\n");
+    printf("Pengguna : %s\n", user);
+    printf("Saldo    : Rp %ld\n", hitungSaldo(user));
+}
+
+/* ---------- laporan ---------- */
+
+/* Rincian pengeluaran per kategori untuk satu pengguna */
+static void cetakPengeluaranPerKategori(const char *user)
+{
+    char kat[MAX_KATEGORI][PANJANG_KATEGORI];
+    long total[MAX_KATEGORI];
+    int n = 0, i, j, idx;
+    long keluar = hitungTotalKeluar(user);
+
+    for (i = 0; i < jumlahTransaksi; i++) {
+        const Transaksi *t = &daftarTransaksi[i];
+        if (strcmp(t->username, user) != 0 || t->tipe != TRANSAKSI_KELUAR)
+            continue;
+
+        idx = -1;
+        for (j = 0; j < n; j++) {
+            if (strcmp(kat[j], t->kategori) == 0) { idx = j; break; }
+        }
+        if (idx == -1) {
+            if (n >= MAX_KATEGORI) continue;
+            idx = n++;
+            strcpy(kat[idx], t->kategori);
+            total[idx] = 0;
+        }
+        total[idx] += t->jumlah;
+    }
+
+    if (n == 0) return;
+
+    printf("\nPengeluaran per kategori:\n");
+    for (i = 0; i < n; i++) {
+        printf("  %-15s Rp %-12ld (%.1f%%)\n", kat[i], total[i],
+               keluar > 0 ? total[i] * 100.0 / keluar : 0.0);
+    }
 }
 
 void laporanKeuangan(void)
@@ -37,6 +119,7 @@ void laporanKeuangan(void)
     printf("Total pemasukan   : Rp %ld\n", hitungTotalMasuk(user));
     printf("Total pengeluaran : Rp %ld\n", hitungTotalKeluar(user));
     printf("Saldo akhir       : Rp %ld\n", hitungSaldo(user));
+    cetakPengeluaranPerKategori(user);
 }
 
 void laporanBulanan(void)
@@ -102,6 +185,6 @@ void laporanBulanan(void)
     printf("---------------------------------------------------\n");
     for (i = 0; i < jumlahBulan; i++) {
         printf("%-9s %-14ld %-14ld %-14ld\n",
-               kunci[i], masuk[i], keluar[i], masuk[i] - keluar[i]);
+        kunci[i], masuk[i], keluar[i], masuk[i] - keluar[i]);
     }
 }

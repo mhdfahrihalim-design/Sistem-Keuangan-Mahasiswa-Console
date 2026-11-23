@@ -3,6 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "transaksi.h"
+#include "laporan.h"
 
 Transaksi daftarTransaksi[MAX_TRANSAKSI];
 int       jumlahTransaksi = 0;
@@ -117,37 +118,6 @@ static const char *userAktifAtauPesan(void)
     return u;
 }
 
-/* ---------- saldo ---------- */
-
-long hitungTotalMasuk(const char *username)
-{
-    long total = 0;
-    int i;
-    for (i = 0; i < jumlahTransaksi; i++) {
-        if (strcmp(daftarTransaksi[i].username, username) == 0 &&
-            daftarTransaksi[i].tipe == TRANSAKSI_MASUK)
-            total += daftarTransaksi[i].jumlah;
-    }
-    return total;
-}
-
-long hitungTotalKeluar(const char *username)
-{
-    long total = 0;
-    int i;
-    for (i = 0; i < jumlahTransaksi; i++) {
-        if (strcmp(daftarTransaksi[i].username, username) == 0 &&
-            daftarTransaksi[i].tipe == TRANSAKSI_KELUAR)
-            total += daftarTransaksi[i].jumlah;
-    }
-    return total;
-}
-
-long hitungSaldo(const char *username)
-{
-    return hitungTotalMasuk(username) - hitungTotalKeluar(username);
-}
-
 /* ---------- tambah ---------- */
 
 static void tambahTransaksi(int tipe)
@@ -164,8 +134,7 @@ static void tambahTransaksi(int tipe)
         return;
     }
 
-    printf("\n=== %s ===\n",
-           tipe == TRANSAKSI_MASUK ? "TAMBAH UANG MASUK" : "TAMBAH PENGELUARAN");
+    printf("\n=== %s ===\n", tipe == TRANSAKSI_MASUK ? "TAMBAH UANG MASUK" : "TAMBAH PENGELUARAN");
 
     bacaString("Jumlah (Rp)           : ", buf, sizeof buf);
     if (!parseJumlah(buf, &jumlah)) {

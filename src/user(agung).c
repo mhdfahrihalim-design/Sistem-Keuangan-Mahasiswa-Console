@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include "user.h"
+#include "../include/user.h"
 
 User daftarUser[MAX_USER];
 int  jumlahUser     = 0;
@@ -117,8 +117,7 @@ int loginPengguna(void)
     printf("\n=== LOGIN PENGGUNA ===\n");
 
     if (indeksUserAktif != -1) {
-        printf("Anda sudah login sebagai %s.\n",
-               daftarUser[indeksUserAktif].username);
+        printf("Anda sudah login sebagai %s.\n", daftarUser[indeksUserAktif].username);
         return 1;
     }
     if (jumlahUser == 0) {
