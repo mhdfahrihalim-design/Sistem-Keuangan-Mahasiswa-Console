@@ -29,10 +29,8 @@ extern int       jumlahTransaksi;
 void tambahUangMasuk(void);
 void tambahPengeluaran(void);
 void riwayatTransaksi(void);
-void cariTransaksi(void);
 void ubahTransaksi(void);
-void hapusTransaksi(void);
 
-/* Perhitungan saldo ada di laporan.h (modul Laporan & Penyimpanan) */
+/* lihatSaldo() dan perhitungan saldo ada di laporan.h (modul Laporan & Penyimpanan) */
 
 #endif
